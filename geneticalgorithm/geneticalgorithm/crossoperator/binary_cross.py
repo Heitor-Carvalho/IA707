@@ -15,3 +15,14 @@ class TwoPointCrossover():
 
         return (sons1, sons2)
 
+class OnePointCrossover():
+    
+    def cross(self, individuals1, individuals2):
+
+        marker = random.permutation(individuals1.shape[1])[0]
+
+        sons1 = c_[individuals1[:, :marker], individuals2[:, marker:]]
+        sons2 = c_[individuals2[:, :marker], individuals1[:, marker:]]
+
+        return (sons1, sons2)
+

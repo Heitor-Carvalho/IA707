@@ -17,31 +17,32 @@ def objective_fun(objects, population):
 
 def main():
         
-    objects = loadtxt('sum_diff.txt')
-    max_iteration = 200
+    objects = loadtxt('sum_diff_order.txt')
+    max_iteration = 400
 
     bin_mutation_par = {}
     bin_mutation_par['steps'] = array([0.1, 0.2, 0.3, 0.4, 0.8])*max_iteration
     bin_mutation_par['steps'] = bin_mutation_par['steps'].astype('int')
-    bin_mutation_par['probs'] = [0.3, 0.3, 0.1, 0.05, 0.02, 0.01]
+    bin_mutation_par['probs'] = [0.8, 0.7, 0.5, 0.3, 0.1, 0.05]
+#    bin_mutation_par['probs'] = [0.8, 0.7, 0.25, 0.9, 0.06, 0.02]
 
     binmut_op = binmut.PunctualStepBinaryMutation(bin_mutation_par)
 
-    cross_op = bincross.TwoPointCrossover()    
+    cross_op = bincross.OnePointCrossover()    
     selection_op = selec.ElitistTournamentSelection(0.6)
 
     N = 200
 
     init_sol = random.rand(N, objects.shape[0]) > 0.5
 
-#    init_sol = zeros((N, objects.shape[0]))
-#    i = 0
-#    while i < N:
-#        init_sol[i] = random.rand(1, objects.shape[0]) > 0.5
-#        if(sum(init_sol[i])/objects.shape[0] > 0.6 or sum(init_sol[i])/objects.shape[0] < 0.4):
-#            continue
-#        else:
-#            i += 1
+    init_sol = zeros((N, objects.shape[0]))
+    i = 0
+    while i < N:
+        init_sol[i] = random.rand(1, objects.shape[0]) > 0.5
+        if(sum(init_sol[i])/objects.shape[0] > 0.6 or sum(init_sol[i])/objects.shape[0] < 0.4):
+            continue
+        else:
+            i += 1
 
     population = concatenate([init_sol, zeros((init_sol.shape[0], 1))], axis = 1)
 
@@ -74,9 +75,10 @@ def main():
         fitness_tracking[i, 1] = min(population[:, -1])
         fitness_tracking[i, 2] = mean(population[:, -1])
         
-        print 'Max %s, Min %s, Mean %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]))
+        print 'Max %s, Min %s, Mean %s, It %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]), i)
 
     savetxt('fitness_evol', fitness_tracking)
+    savetxt('best', best)
 
 
 
