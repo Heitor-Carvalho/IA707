@@ -14,9 +14,9 @@ def objective_fun(value):
 
 def main():
     # Population size
-    N = 10
-    max_mut_it = 50
-    max_iteration = 50
+    N = 20
+    max_mut_it = 30
+    max_iteration = 30
 
     # Instantiating mutator operator
     mutation_op = realmut.NonUniformMutation(-1, 2, 2.5, max_mut_it)
@@ -37,6 +37,7 @@ def main():
     
         # Generate mutation
         population[:, -1] = objective_fun(population)
+
         best = copy.copy(population[argmax(population[:, -1]), :])
         population[:, 0:-1] = mutation_op.mutate(population[:, 0:-1], i)
         population[0] = best
@@ -65,7 +66,8 @@ def main():
 
         print 'Max %s, Min %s, Mean %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]))
         
-    savetxt('fitness_evol', fitness_tracking)
+    savetxt('fitness_evol', fitness_tracking, fmt='%1.4f')
+    savetxt('best_sol', best, fmt='%1.4f')
 
 if __name__ == '__main__':
     main()

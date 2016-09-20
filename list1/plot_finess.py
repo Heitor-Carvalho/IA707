@@ -6,8 +6,7 @@ import matplotlib.pyplot as plt
 import glob 
 
 def main():
-#    files = glob.glob('/home/heitor/Repo/IA707/list1/ex1/list1_ex1_fitness/even/fitness_evol*')
-    files = glob.glob('/home/heitor/Repo/IA707/list1/ex2/list1_ex2_fitness/param3/fitness_evol*')
+    files = glob.glob('/home/heitor/Repo/IA707/list1/ex3/fitness_evol*')
     i = 1
     for file in files:
     	print 'Saving figure from file: ', file
@@ -19,8 +18,8 @@ def main():
         plt.setp(fit_plot1, linewidth=2)
         plt.setp(fit_plot2, linewidth=2)
         plt.setp(fit_plot3, linewidth=2)
-        plt.legend(loc=4)
-        plt.axis([0, fitness.shape[0], 13549094*0.7, 13549094*1.1])
+        plt.legend(loc=2)
+        plt.axis([0, fitness.shape[0], 0, 4.5])
         plt.savefig('fitness_eval' + str(i))
         plt.clf()
         i += 1

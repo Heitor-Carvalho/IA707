@@ -12,14 +12,12 @@ class NonUniformMutation(object):
     def mutate(self, number_array, iteraction):
         
         # Particular case for two cromossomo
-        crom_idx = int(round(random.rand(1)))
-
-        rrr = random.rand(number_array.shape[0])
+        rrr = random.rand(number_array.shape[0], number_array.shape[1])
         if(random.rand(1) > 0.5):
-            delta = (self.b - number_array[:, crom_idx])
+            delta = (self.b - number_array[:, :])
         else:
-            delta = -(number_array[:, crom_idx] - self.a)
+            delta = -(number_array[:, :] - self.a)
 
-        number_array[:, crom_idx] = number_array[:, crom_idx] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
+        number_array[:, :] = number_array[:, :] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
 
         return number_array

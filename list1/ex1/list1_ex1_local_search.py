@@ -10,6 +10,7 @@ import geneticalgorithm.selectionoperator.selection as selec
 objects = loadtxt('sum_diff_order.txt')
 
 def local_seach(best):
+    print 'HA'
     best.shape = (1, size(best))
     changes = eye(size(best)-1)
     for change in changes:
@@ -87,7 +88,7 @@ def main():
         fitness_tracking[i, 1] = min(population[:, -1])
         fitness_tracking[i, 2] = mean(population[:, -1])
 
-        if(i % 80 == 0):
+        if(i % 50 == 0):
             best = local_seach(best)
         
 #        print 'Max %s, Min %s, Mean %s, It %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]), i)

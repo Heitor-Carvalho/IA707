@@ -40,7 +40,7 @@ def main():
 
     N = 200
 
-    init_sol = random.rand(N, objects.shape[0]) > 0.5
+#    init_sol = random.rand(N, objects.shape[0]) > 0.5
 
     init_sol = zeros((N, objects.shape[0]))
     i = 0
@@ -52,8 +52,7 @@ def main():
            i += 1
 
     population = concatenate([init_sol, zeros((init_sol.shape[0], 1))], axis = 1)
-    savetxt('random_population_fitness', objective_fun(objects, max_capacity, population), fmt='%1.4f')
-    import pdb; pdb.set_trace()
+
     sons1 = zeros((population.shape[0]/2, population.shape[1]))
     sons2 = zeros((population.shape[0]/2, population.shape[1]))
 
