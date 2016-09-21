@@ -9,21 +9,26 @@ class ArithmeticCrossover(object):
 
 class SpeciationCrossover(object):
     
-    def __init__(self, sigmate)
+    def __init__(self, sigmate):
         self.sigmate = sigmate
 
     def cross(self, population):
-        import pdb; pdb.set_trace()
-
-        for i in arrange(population.shape[0]):
-            dist = abs(individual[-1] - concatenate([population[0:i, :], population[i+1:, :]], axis = 0))
-            idx = argmin(dist) + 1
-        pop1, pop2 = meshgrid(population[:, -1], population[:, -1])
-        dist = abs(pop2-pop1) + 9.0*eye(pop1.shape[0], pop1.shape[1])
-        idx = dist < self.sigmate
-        
-
-
 
         alpha = random.rand(1)
-        return (alpha*individuals1 + (1 - alpha)*individuals2, (1 - alpha)*individuals1 + alpha*individuals2)
+
+        sons1 = zeros((population.shape[0]/2, population.shape[1]-1))
+        sons2 = zeros((population.shape[0]/2, population.shape[1]-1))
+
+        for i in arange(population.shape[0]/2):
+            dist = abs(population[i, -1] - concatenate([population[0:i, -1], population[i+1:, -1]], axis = 0))
+            mates = where(dist < self.sigmate)[0]
+
+            if size(mates) == 0:
+                mate_idx = random.permutation(population.shape[0])[0]
+            else:
+                mate_idx = mates[random.permutation(mates.shape[0])[0]]
+
+            sons1[i, :] = alpha*population[i, :-1] + (1 - alpha)*population[mate_idx, :-1]
+            sons2[i, :] = (1 - alpha)*population[i, :-1] + alpha*population[mate_idx, :-1]
+
+        return (sons1, sons2)

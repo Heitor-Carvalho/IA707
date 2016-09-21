@@ -2,11 +2,13 @@ from numpy import *
 
 class FitnessSharing(object):
     
-    def __init__(self, sigma, alpha):
+    def __init__(self, sigma, alpha, betta):
         self.sig = sigma
         self.alpha = alpha
+        self.beta = betta
 
     def shared_fitness(self, population):
+
         dist_axis = zeros((population.shape[0], population.shape[0]))
         for i in arange(0, population.shape[1]-1):
             pop1_axis, pop2_axis = meshgrid(population[:, i], population[:, i])
@@ -21,6 +23,4 @@ class FitnessSharing(object):
         
         c = sum(sh, axis = 0)
 
-        return population[:, -1]/c        
-
-
+        return (population[:, -1]**self.beta)/c        

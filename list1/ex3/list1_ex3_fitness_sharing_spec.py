@@ -7,7 +7,6 @@ import geneticalgorithm.crossoperator.real_cross as realcross
 import geneticalgorithm.selectionoperator.selection as selec
 import geneticalgorithm.fitness.fitness as fitsh
 
-
 def objective_fun(value):
     x = value[:, 0]
     y = value[:, 1]
@@ -16,14 +15,14 @@ def objective_fun(value):
 def main():
     # Population size
     N = 100
-    max_mut_it = 100
-    max_iteration = 90
+    max_mut_it = 90
+    max_iteration = 100
 
     # Instantiating mutator operator
-    mutation_op = realmut.PercentNonUniformMutation(-1, 2, 5, max_mut_it, 0.3)
-    cross_op =  realcross.ArithmeticCrossover()
+    mutation_op = realmut.PercentNonUniformMutation(-1, 2, 2.5, max_mut_it, 0.15)
+    cross_op =  realcross.SpeciationCrossover(0.7)
     selection_op = selec.StocasticUnivSamplingSelection()
-    fitsh_op = fitsh.FitnessSharing(0.8, 1)
+    fitsh_op = fitsh.FitnessSharing(0.5, 1, 3)
 
     # Random population in the interval [-1, 2] 
     init_solutions = 3*random.rand(N, 2) - 1;
@@ -42,13 +41,7 @@ def main():
 
         # Crossing individuals (double the population)
         population[:, -1] = objective_fun(population)
-        #sons1[:, 0:-1], sons2[:, 0:-1] = cross_op.cross(population)
-
-        # Selec random individuals to cross
-        individuals = random.permutation(population.shape[0])
-   
-        # Crossing random individuals (double the population)
-        sons1[:, 0:-1], sons2[:, 0:-1] = cross_op.cross(population[individuals[0:N/2], 0:-1], population[individuals[N/2:], 0:-1])
+        sons1[:, 0:-1], sons2[:, 0:-1] = cross_op.cross(population)
        
         # New population with double size
         new_population = concatenate([population, sons1, sons2], axis = 0)
@@ -56,8 +49,6 @@ def main():
         # Calculating population fitness
         new_population[:, -1] = objective_fun(new_population[:, 0:-1])
         
-        savetxt('population' + str(i), new_population, fmt='%1.4f')
-
         fitness_tracking[i, 0] = max(new_population[:, -1])
         fitness_tracking[i, 1] = min(new_population[:, -1])
         fitness_tracking[i, 2] = mean(new_population[:, -1])
@@ -68,6 +59,7 @@ def main():
         # Selecting individuals
         population = selection_op.select(new_population)   
 
+        savetxt('population' + str(i), population, fmt='%1.4f')
 
         print 'Max %s, Min %s, Mean %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]))
         
