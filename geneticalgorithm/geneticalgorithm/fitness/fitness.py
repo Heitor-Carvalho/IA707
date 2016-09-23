@@ -1,4 +1,5 @@
 from numpy import *
+from copy import copy
 
 class FitnessSharing(object):
     
@@ -22,5 +23,5 @@ class FitnessSharing(object):
         sh[idx] = 1 - (dist[idx]/self.sig)**self.alpha
         
         c = sum(sh, axis = 0)
-
+        
         return (population[:, -1]**self.beta)/c        

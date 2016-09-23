@@ -1,4 +1,4 @@
-
+from copy import copy
 from numpy import *
 
 class NonUniformMutation(object):
@@ -9,18 +9,43 @@ class NonUniformMutation(object):
         self.p = float(p)
         self.T = float(T)
 
-    def mutate(self, number_array, iteraction):
+    def mutate(self, population, iteraction):
         
         # Particular case for two cromossomo
-        rrr = random.rand(number_array.shape[0], number_array.shape[1])
+        rrr = random.rand(population.shape[0], population.shape[1]-1)
         if(random.rand(1) > 0.5):
-            delta = (self.b - number_array[:, :])
+            delta = (self.b - population[:, :-1])
         else:
-            delta = -(number_array[:, :] - self.a)
+            delta = -(population[:, :-1] - self.a)
 
-        number_array[:, :] = number_array[:, :] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
+        population[:, :-1] = population[:, :-1] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
 
-        return number_array
+        return population
+
+class ElitistNonUniformMutation(object):
+    
+    def __init__(self, a, b, p, T):
+        self.a = float(a)
+        self.b = float(b)
+        self.p = float(p)
+        self.T = float(T)
+
+    def mutate(self, population, iteraction):
+        
+        best = copy(population[argmax(population[:, -1])])
+
+        # Particular case for two cromossomo
+        rrr = random.rand(population.shape[0], population.shape[1]-1)
+        if(random.rand(1) > 0.5):
+            delta = (self.b - population[:, :-1])
+        else:
+            delta = -(population[:, :-1] - self.a)
+
+        population[:, :-1] = population[:, :-1] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
+
+        population[-1, :] = best
+        
+        return population
 
 class PercentNonUniformMutation(object):
     
@@ -31,17 +56,45 @@ class PercentNonUniformMutation(object):
         self.T = float(T)
         self.percent = percent
 
-    def mutate(self, number_array, iteraction):
+    def mutate(self, population, iteraction):
 
-        # Particular case for two cromossomo
-        size = int(number_array.shape[0]*self.percent)
+        size = int(population.shape[0]*self.percent)
         idxs = random.permutation(size)
-        rrr = random.rand(idxs.shape[0], number_array.shape[1])
+
+        rrr = random.rand(idxs.shape[0], population.shape[1]-1)
         if(random.rand(1) > 0.5):
-            delta = (self.b - number_array[idxs, :])
+            delta = (self.b - population[idxs, :-1])
         else:
-            delta = -(number_array[idxs, :] - self.a)
+            delta = -(population[idxs, :-1] - self.a)
 
-        number_array[idxs, :] = number_array[idxs, :] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
+        population[idxs, :-1] = population[idxs, :-1] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
 
-        return number_array
+        return population
+
+class ElitistPercentNonUniformMutation(object):
+    
+    def __init__(self, a, b, p, T, percent):
+        self.a = float(a)
+        self.b = float(b)
+        self.p = float(p)
+        self.T = float(T)
+        self.percent = percent
+
+    def mutate(self, population, iteraction):
+
+        best = copy(population[argmax(population[:, -1])])
+
+        size = int(population.shape[0]*self.percent)
+        idxs = random.permutation(size)
+
+        rrr = random.rand(idxs.shape[0], population.shape[1]-1)
+        if(random.rand(1) > 0.5):
+            delta = (self.b - population[idxs, :-1])
+        else:
+            delta = -(population[idxs, :-1] - self.a)
+
+        population[idxs, :-1] = population[idxs, :-1] + delta*(1 - rrr**(1 - min(iteraction, self.T)/self.T)**self.p)
+
+        population[-1, :] = best
+        
+        return population

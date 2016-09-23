@@ -16,63 +16,54 @@ def objective_fun(value):
 def main():
     # Population size
     N = 100
-    max_mut_it = 100
-    max_iteration = 90
+    max_mut_it = 90
+    max_iteration = 100 
 
     # Instantiating mutator operator
-    mutation_op = realmut.PercentNonUniformMutation(-1, 2, 5, max_mut_it, 0.3)
+    mutation_op = realmut.PercentNonUniformMutation(-1, 2, 3, max_mut_it, 0.4)
     cross_op =  realcross.ArithmeticCrossover()
-    selection_op = selec.StocasticUnivSamplingSelection()
-    fitsh_op = fitsh.FitnessSharing(0.8, 1)
+    selection_op = selec.ElitistStocasticUnivSamplingSelection()
+    fitsh_op = fitsh.FitnessSharing(0.5, 1, 3)
 
     # Random population in the interval [-1, 2] 
     init_solutions = 3*random.rand(N, 2) - 1;
     population = concatenate([init_solutions, zeros((init_solutions.shape[0], 1))], axis = 1)
+    new_population = zeros((population.shape[0]*2, population.shape[1]))
 
-    # Initializing sons
-    sons1 = zeros((population.shape[0]/2, population.shape[1]))
-    sons2 = zeros((population.shape[0]/2, population.shape[1]))
-    
+    # Creating fitness tracking
     fitness_tracking = zeros((max_iteration, 3))
 
     for i in arange(max_iteration):
     
-        # Generate mutation
-        population[:, 0:-1] = mutation_op.mutate(population[:, 0:-1], i)
-
-        # Crossing individuals (double the population)
+        # Population fitness evaluation
         population[:, -1] = objective_fun(population)
-        #sons1[:, 0:-1], sons2[:, 0:-1] = cross_op.cross(population)
 
-        # Selec random individuals to cross
-        individuals = random.permutation(population.shape[0])
-   
-        # Crossing random individuals (double the population)
-        sons1[:, 0:-1], sons2[:, 0:-1] = cross_op.cross(population[individuals[0:N/2], 0:-1], population[individuals[N/2:], 0:-1])
-       
-        # New population with double size
-        new_population = concatenate([population, sons1, sons2], axis = 0)
+        savetxt('population' + str(i), population, fmt='%1.4f')
 
-        # Calculating population fitness
-        new_population[:, -1] = objective_fun(new_population[:, 0:-1])
-        
-        savetxt('population' + str(i), new_population, fmt='%1.4f')
+        fitness_tracking[i, 0] = max(population[:, -1])
+        fitness_tracking[i, 1] = min(population[:, -1])
+        fitness_tracking[i, 2] = mean(population[:, -1])
 
-        fitness_tracking[i, 0] = max(new_population[:, -1])
-        fitness_tracking[i, 1] = min(new_population[:, -1])
-        fitness_tracking[i, 2] = mean(new_population[:, -1])
- 
-        # Calculating fitness sharing
+        # Population mutation
+        population = mutation_op.mutate(population, i)
+
+        # Population crossover
+        new_population, idx_sons = cross_op.cross(population)
+
+        # Fitness evaluation
+        new_population[:, -1] = objective_fun(new_population)
+
+        # Getting shared fitness
         new_population[:, -1] = fitsh_op.shared_fitness(new_population)
-
-        # Selecting individuals
+   
+        # Selecting individuals                
         population = selection_op.select(new_population)   
-
-
-        print 'Max %s, Min %s, Mean %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]))
+        
+        
+        print 'Max %s, Min %s, Mean %s, It %s' % (max(population[:, -1]), min(population[:, -1]), mean(population[:, -1]), i)
         
     savetxt('fitness_evol', fitness_tracking, fmt='%1.4f')
-#    savetxt('best_sol', best, fmt='%1.4f')
+    savetxt('best_sol', population[argmax(population[:, -1])], fmt='%1.4f')
 
 if __name__ == '__main__':
     main()
