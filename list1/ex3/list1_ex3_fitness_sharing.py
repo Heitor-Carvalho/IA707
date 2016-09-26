@@ -20,8 +20,8 @@ def main():
     max_iteration = 100 
 
     # Instantiating mutator operator
-    mutation_op = realmut.PercentNonUniformMutation(-1, 2, 3, max_mut_it, 0.4)
-    cross_op =  realcross.ArithmeticCrossover()
+    mutation_op = realmut.ElitistPercentNonUniformMutation(-1, 2, 3, max_mut_it, 0.4)
+    cross_op =  realcross.ElitistArithmeticCrossover()
     selection_op = selec.ElitistStocasticUnivSamplingSelection()
     fitsh_op = fitsh.FitnessSharing(0.5, 1, 3)
 
@@ -38,7 +38,7 @@ def main():
         # Population fitness evaluation
         population[:, -1] = objective_fun(population)
 
-        savetxt('population' + str(i), population, fmt='%1.4f')
+#        savetxt('population' + str(i), population, fmt='%1.4f')
 
         fitness_tracking[i, 0] = max(population[:, -1])
         fitness_tracking[i, 1] = min(population[:, -1])

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import glob 
 
 def main():
-    files = glob.glob('./ex3/list1_ex3_fitness/itens_ab/fitness_evol*')
+    files = glob.glob('./ex3/fitness_evol*')
     i = 1
     for file in files:
     	print 'Saving figure from file: ', file

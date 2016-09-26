@@ -38,6 +38,8 @@ def main():
         # Population fitness evaluation
         population[:, -1] = objective_fun(population)
 
+        savetxt('population' + str(i), population, fmt='%1.4f')
+
         # Population mutation
         population = mutation_op.mutate(population, i)
 
