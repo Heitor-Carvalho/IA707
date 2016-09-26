@@ -1,7 +1,5 @@
-
 from numpy import *
 import copy
-import sys
 
 import geneticalgorithm.crossoperator.binary_cross as bincross
 import geneticalgorithm.mutatoroperator.binary_mutation as binmut
@@ -42,16 +40,14 @@ def main():
     N = 50
 
     # Generating population
-    init_sol = random.rand(N*max_iteration*2, objects.shape[0]) > 0.5
-
-#    init_sol = zeros((N, objects.shape[0]))
-#    i = 0
-#    while i < N:
-#        init_sol[i] = random.rand(1, objects.shape[0]) > 0.5
-#       if(sum(init_sol[i])/objects.shape[0] > 0.6 or sum(init_sol[i])/objects.shape[0] < 0.4):
-#           continue
-#       else:
-#          i += 1
+    init_sol = zeros((N, objects.shape[0]))
+    i = 0
+    while i < N:
+        init_sol[i] = random.rand(1, objects.shape[0]) > 0.5
+       if(sum(init_sol[i])/objects.shape[0] > 0.6 or sum(init_sol[i])/objects.shape[0] < 0.4):
+           continue
+       else:
+          i += 1
     population = concatenate([init_sol, zeros((init_sol.shape[0], 1))], axis = 1)
     new_population = zeros((population.shape[0]*2, population.shape[1]))
 
@@ -62,8 +58,6 @@ def main():
 
         # Population fitness evaluation
         population[:, -1] = objective_fun(objects, max_capacity, population)
-        savetxt('pop', population[:, -1], fmt='%1.4f')
-        sys.exit()
 
         # Population mutation
         population = binmut_op.mutate(population, i)
