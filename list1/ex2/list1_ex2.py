@@ -30,12 +30,12 @@ def main():
     bin_mutation_par = {}
     bin_mutation_par['steps'] = array([0.1, 0.2, 0.3, 0.4, 0.8])*max_iteration
     bin_mutation_par['steps'] = bin_mutation_par['steps'].astype('int')
-    bin_mutation_par['probs'] = [0.5, 0.3, 0.2, 0.2, 0.15, 0.15]
+    bin_mutation_par['probs'] = [0.5, 0.3, 0.2, 0.2, 0.15, 0.08]
 
     # Instantiating genetic operators
     binmut_op = binmut.ElitistPunctualStepBinaryMutation(bin_mutation_par)
     cross_op = bincross.ElitistTwoPointCrossover()    
-    selection_op = selec.ElitistTournamentSelection(0.35)
+    selection_op = selec.ElitistTournamentSelection(0.45)
 
     N = 50
 
@@ -43,7 +43,7 @@ def main():
     init_sol = zeros((N, objects.shape[0]))
     i = 0
     while i < N:
-        init_sol[i] = random.rand(1, objects.shape[0]) > 0.5
+       init_sol[i] = random.rand(1, objects.shape[0]) > 0.5
        if(sum(init_sol[i])/objects.shape[0] > 0.6 or sum(init_sol[i])/objects.shape[0] < 0.4):
            continue
        else:
