@@ -10,7 +10,7 @@ class TwoPointCrossover():
         individuals1 = population[individuals[0:population.shape[0]/2], :]
         individuals2 = population[individuals[population.shape[0]/2:], :]
  
-        markers = random.permutation(individuals1.shape[1]-1)[0:1]
+        markers = random.permutation(individuals1.shape[1]-1)[0:2]
 
         marker1 = min(markers)
         marker2 = max(markers)
@@ -18,12 +18,10 @@ class TwoPointCrossover():
         sons1 = zeros(individuals1.shape)
         sons2 = zeros(individuals1.shape)
 
-        sons1[:, :-1] = c_[individuals1[:, :marker1], individuals2[:, marker1:marker2][::-1], individuals1[:, marker2:-1]]
-        sons2[:, :-1] = c_[individuals2[:, :marker1][::-1], individuals1[:, marker1:marker2], individuals2[:, marker2:-1][::-1]]
+        sons1[:, :-1] = c_[individuals1[:, :marker1], individuals2[:, marker1:marker2], individuals1[:, marker2:-1]]
+        sons2[:, :-1] = c_[individuals2[:, :marker1], individuals1[:, marker1:marker2], individuals2[:, marker2:-1]]
 
         new_population = concatenate([population, sons1, sons2], axis = 0)
-
-        new_population[-1, :] = best
 
         return new_population, population.shape[0]
 
@@ -38,7 +36,7 @@ class ElitistTwoPointCrossover():
         individuals1 = population[individuals[0:population.shape[0]/2], :]
         individuals2 = population[individuals[population.shape[0]/2:], :]
  
-        markers = random.permutation(individuals1.shape[1]-1)[0:1]
+        markers = random.permutation(individuals1.shape[1]-1)[0:2]
 
         marker1 = min(markers)
         marker2 = max(markers)
@@ -46,10 +44,12 @@ class ElitistTwoPointCrossover():
         sons1 = zeros(individuals1.shape)
         sons2 = zeros(individuals1.shape)
 
-        sons1[:, :-1] = c_[individuals1[:, :marker1], individuals2[:, marker1:marker2][::-1], individuals1[:, marker2:-1]]
-        sons2[:, :-1] = c_[individuals2[:, :marker1][::-1], individuals1[:, marker1:marker2], individuals2[:, marker2:-1][::-1]]
+        sons1[:, :-1] = c_[individuals1[:, :marker1], individuals2[:, marker1:marker2], individuals1[:, marker2:-1]]
+        sons2[:, :-1] = c_[individuals2[:, :marker1], individuals1[:, marker1:marker2], individuals2[:, marker2:-1]]
 
         new_population = concatenate([population, sons1, sons2], axis = 0)
+
+        new_population[-1, :] = best
 
         return new_population, population.shape[0]
 
