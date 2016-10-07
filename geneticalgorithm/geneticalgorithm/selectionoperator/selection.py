@@ -1,6 +1,25 @@
 from numpy import *
 from copy import copy
 
+class PETournamentSelection(object):
+    
+    def __init__(self, tour_size):
+        self.tour_size = tour_size
+
+    def select(self, population):
+        
+        individuals = random.permutation(population.shape[0])[0:self.tour_size]
+
+        score = zeros((population.shape[0], 1))
+        for i in arange(0, population.shape[0]):
+            score[i, :] = sum(population[i, -1] > population[individuals, -1])
+                
+        sort_idx = argsort(score[:, 0])
+        survivors = population[sort_idx, :][population.shape[0]/2:]
+
+        return survivors
+
+
 class StocasticUnivSamplingSelection(object):
 
     def select(self, population):
