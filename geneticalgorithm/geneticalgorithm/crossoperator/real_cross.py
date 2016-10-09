@@ -1,6 +1,41 @@
 from copy import copy
 from numpy import *
 
+class ElitistEEArithmeticCrossover(object):
+
+    def cross(self, population, evol_parameters):
+
+        best = copy(population[argmax(population[:, -1])])
+        best_par = copy(evol_parameters[argmax(population[:, -1])])
+
+        individuals = random.permutation(population.shape[0])
+
+        idx1 = individuals[0:population.shape[0]/2]
+        idx2 = individuals[population.shape[0]/2:]
+
+        individuals1 = population[idx1, :]
+        individuals2 = population[idx2, :]
+        evol_par1 = evol_parameters[idx1, :]
+        evol_par2 = evol_parameters[idx2, :]
+
+        alpha = random.rand(1)
+
+        sons1 = zeros(individuals1.shape)
+        sons2 = zeros(individuals1.shape)
+
+        sons1[:, :-1] = alpha*individuals1[:, :-1] + (1 - alpha)*individuals2[:, :-1]
+        sons1_par = alpha*evol_par1[:, :] + (1 - alpha)*evol_par2[:, :]
+        sons2[:, :-1] = (1 - alpha)*individuals1[:, :-1] + alpha*individuals2[:, :-1]
+        sons2_par = (1 - alpha)*evol_par1[:, :] + alpha*evol_par2[:, :]
+        
+        new_evol_parameters = concatenate([evol_parameters, sons1_par, sons2_par], axis = 0) 
+        new_population = concatenate([population, sons1, sons2], axis = 0)
+
+        new_population[-1, :] = best
+        new_evol_parameters[-1, :] = best_par
+
+        return new_population, new_evol_parameters, population.shape[0]
+
 class ArithmeticCrossover(object):
 
     def cross(self, population):

@@ -18,15 +18,15 @@ def objective_fun(dist_matrix, population):
 def main():
         
     dist_matrix = loadtxt('dist.txt')
-    max_iteration = 2000
+    max_iteration = 350*3
 
 
     # Instantiating genetic operators
-    binmut_op = permut.ElitistPercentReverseMutation(0.6)
-    selection_op = selec.PETournamentSelection(20)
+    binmut_op = permut.ElitistPercentReverseMutation(1)
+    selection_op = selec.PETournamentSelection(40)
 
     # Population size
-    N = 200
+    N = 50
     
     # Generating population
     init_sol = zeros((N, dist_matrix.shape[1]))
@@ -44,13 +44,13 @@ def main():
         
         # Population fitness evaluation
         population[:, -1] = objective_fun(dist_matrix, population)
-        
+
         new_population[0:population.shape[0], :] = population
 
         # Double the population with mutation
         new_population[population.shape[0]:, :] = binmut_op.mutate(population, i)
 
-        # Fitness evaluation population with mutation
+        # Fitness evaluation popula tion with mutation
         new_population[:, -1] = objective_fun(dist_matrix, new_population)
         
         # Selecting individuals                

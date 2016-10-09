@@ -19,7 +19,7 @@ def objective_fun(dist_matrix, population):
 def main():
         
     dist_matrix = loadtxt('dist.txt')
-    max_iteration = 300
+    max_iteration = 350
 
 
     # Instantiating genetic operators
@@ -28,7 +28,7 @@ def main():
     selection_op = selec.ElitistTournamentSelection(0.75)
 
     # Population size
-    N = 500
+    N = 100
     
     # Generating population
     init_sol = zeros((N, dist_matrix.shape[1]))

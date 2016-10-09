@@ -55,6 +55,8 @@ class ElitistPercentReverseMutation():
     def mutate(self, population, iteraction):
 
         best = copy(population[argmax(population[:, -1])])
+        
+        population_m = copy(population)
 
         size = int(population.shape[0]*self.percent)
         idxs = random.permutation(size)
@@ -65,11 +67,11 @@ class ElitistPercentReverseMutation():
             marker1 = min(markers)
             marker2 = max(markers)
 
-            population[idxs[i], marker1:marker2] = population[idxs[i], marker1:marker2][::-1]
+            population_m[idxs[i], marker1:marker2] = population_m[idxs[i], marker1:marker2][::-1]
 
-        population[-1, :] = best
+        population_m[-1, :] = best
 
-        return population
+        return population_m
 
 class PercentReverseMutation():
 
