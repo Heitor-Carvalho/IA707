@@ -25,6 +25,22 @@ class ElitistPercentScrambleMutation():
 
         return population
 
+class TwoPointsSwapMutation():  
+
+    def __init__(self, percent):
+        self.percent = percent
+    
+    def mutate(self, population, iteraction):
+
+        size = int(population.shape[0]*self.percent)
+        idxs = random.permutation(size)
+        
+        for i in arange(0, size):
+            markers = random.permutation(population.shape[1]-1)[0:2]
+
+            population[idxs[i], markers] = population[idxs[i], markers[::-1]]
+
+        return population
 
 class PercentScrambleMutation():
 

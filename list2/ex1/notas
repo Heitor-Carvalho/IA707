@@ -1,0 +1,18 @@
+Observando as figuras referentes ao AG nota-se que uma queda muito alta da distancia média dos caminhos e também da distância do menor caminho, essa queda é mantida até próximo a iteração 200. A partir desta iteração a evolução do algorítmo se torna mais lenta. Até convergir um valor de distância mínica que é mantido durante grande parte das últimas iterações.
+
+O comportamento inicial da curva pode ser explicado devida a população de soluções ser gerada aleatóriamente, o que resultara em caminhos com grande distância. Um exemplo de solução aleatória pode ser visa abaixo:
+
+
+
+Pode-se ver que soluções deste tipo claramente apresentam grandes distâncias e serão gradualmente removidas da população pelo processo de seleção. No caso, melhores soluções são obitidas pelo o uso de um operador de mutação reversa. Este operador consiste em reverter o caminho percorrido entre duas cidades fazendo com que cruzamento de rota sejam eliminados o que resulta em soluções com menor distância como mostrado em X. Já o cruzamento entre indivíduos contribuirá para combinar trechos de caminhos já existentes. Este processo irá contribuir para melhores soluções ao gerar caminhos que são combinações de trechos com baixas distância. No final do processo um grande número de soluções não possuem cruzamentos e a melhoria obtida pelo processo de mutação reversa diminui. Além disso, a combinação de trachos de caminhos semelhandos diminui a chance de encontrar melhores soluções. Assim soluções do tipo mostrado abaixo são geradas.
+
+
+
+
+Pode-se ver que na solução final encontrada em um dos casos não nenhum cruzamento entre as rotas e que intuitivamente a soluçao coerente parece boa solução.
+
+
+Ao analisar as curvas para aplicando o algorítmo de PE. Vê-se um comportamento semelhante ao caso do AG, onde há uma grande melhora na primeira parte das execuções e uma convergência mais lenta no final do algorítmo. No entanto, diferente do AG a PE teve uma evolução mais lenta da melhor solução, precisando de mais iterações para chegar a uma bom caminho. É importanto comentar, que no caso implementado não há nenhum vetor de parâmetros relacionado ao operador de mutação e não há nenhum processo de auto-adaptação (meta-PE). Sendo somente aplicado a PE clássica onde não há nenhum tipo de operação recombinação. 
+
+
+# Pesquisar questao do operador de reversao e do operador PMX

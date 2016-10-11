@@ -18,12 +18,12 @@ def objective_fun(dist_matrix, population):
 def main():
         
     dist_matrix = loadtxt('dist.txt')
-    max_iteration = 350*3
+    max_iteration = 1500
 
 
     # Instantiating genetic operators
     binmut_op = permut.ElitistPercentReverseMutation(1)
-    selection_op = selec.PETournamentSelection(40)
+    selection_op = selec.PETournamentSelection(120)
 
     # Population size
     N = 50

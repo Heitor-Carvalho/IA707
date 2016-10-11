@@ -6,8 +6,8 @@ class ElitistCorrelatedMutation(object):
 
     def __init__(self, beta, tal1, tal2):
         self.beta = beta # - 0.0873
-        self.tal1 = tal1 # - (2*population.shape[0])**(-0.5) - all sigmas are affected
-        self.tal2 = tal2 # - ((2*population.shape[0])**(0.5))*(-0.5) - individual sigmas are affected
+        self.tal1 = tal1 
+        self.tal2 = tal2 
 
     def mutate(self, population, iteraction, evol_parameters):
 
@@ -15,7 +15,6 @@ class ElitistCorrelatedMutation(object):
         best_par = copy(evol_parameters[argmax(population[:, -1])])
 
         # Calculating rotation matrix
-        sigma_m = eye(evol_parameters.shape[0])*evol_parameters[:, 0]        
         prod_m = eye(evol_parameters.shape[0])
         for i in arange(0, evol_parameters.shape[0]):
             for j in arange(i+1, evol_parameters.shape[0]):
@@ -31,19 +30,23 @@ class ElitistCorrelatedMutation(object):
         evol_parameters[:, 0:1] = evol_parameters[:, 0:1]*exp(self.tal1*random.randn(1) + self.tal2*random.randn(population.shape[0], 1))
         evol_parameters[:, 1:2] = evol_parameters[:, 1:2] + (evol_parameters[:, 1:2]*self.beta*random.randn(evol_parameters[:, 1].shape[0], 1)) % 2*pi
 
+        sigma_m = eye(evol_parameters.shape[0])*evol_parameters[:, 0]        
         # Mutating population
-        mutation = dot(dot(transpose(sigma_m),transpose(prod_m)),random.randn(population.shape[0], 1))
+
+        mutation = transpose(array([evol_parameters[:, 0], evol_parameters[:, 0]]))*random.randn(population.shape[0], 2)
+
+        print 'delta:', max(mutation[:,0])
+        print 'mean:', mean(mutation[:,0])
         population[:, :-1] = population[:, :-1] + mutation
 
-        print sigma_m[0,0]
+        print 'Sigma: ', mean(evol_parameters[:, 0])
         print self.tal1
         print self.tal2
-
 
         population[-1, :] = best
         evol_parameters[-1, :] = best_par
 
-        return population
+        return population, evol_parameters
 
 class CorrelatedMutation(object):
 
@@ -55,7 +58,6 @@ class CorrelatedMutation(object):
     def mutate(self, population, iteraction, evol_parameters):
 
         # Calculating rotation matrix
-        sigma_m = eye(evol_parameters.shape[0])*evol_parameters[:, 0]        
         prod_m = eye(evol_parameters.shape[0])
         for i in arange(0, evol_parameters.shape[0]):
             for j in arange(i+1, evol_parameters.shape[0]):
@@ -66,14 +68,25 @@ class CorrelatedMutation(object):
                 rot_m[j,i] = sin(evol_parameters[i, 1]) 
                 prod_m = dot(prod_m, rot_m)
         
-        # Mutating population
-        population[:, :-1] = population[:, :-1] + dot(dot(transpose(sigma_m),transpose(prod_m)),random.randn(population.shape[0], 1))
 
         # Mutating parameters
-        evol_parameters[:, 0] = evol_parameters[:, 0]*exp(self.tal1*random.randn(1) + self.tal2*random.randn(population.shape[0], 1))
-        evol_parameters[:, 1] = evol_parameters[:, 1] + (evol_parameters[:, 1]*self.beta*random.randn(evol_parameters[:, 1].shape[0])) % 2*pi
+        evol_parameters[:, 0:1] = evol_parameters[:, 0:1]*exp(self.tal1*random.randn(1) + self.tal2*random.randn(population.shape[0], 1))
+        evol_parameters[:, 1:2] = evol_parameters[:, 1:2] + (evol_parameters[:, 1:2]*self.beta*random.randn(evol_parameters[:, 1].shape[0], 1)) % 2*pi
 
-        return population
+        sigma_m = eye(evol_parameters.shape[0])*evol_parameters[:, 0]        
+        # Mutating population
+
+        mutation = transpose(array([evol_parameters[:, 0], evol_parameters[:, 0]]))*random.randn(population.shape[0], 2)
+
+        print 'delta:', max(mutation[:,0])
+        print 'mean:', mean(mutation[:,0])
+        population[:, :-1] = population[:, :-1] + mutation
+
+        print 'Sigma: ', mean(evol_parameters[:, 0])
+        print self.tal1
+        print self.tal2
+
+        return population, evol_parameters
         
 
 class NonUniformMutation(object):

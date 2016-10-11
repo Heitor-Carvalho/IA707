@@ -49,8 +49,29 @@ class EETournamentSelection(object):
 
         return survivors, survivors_par
 
-
 class EEStocasticUnivSamplingSelection(object):
+
+    def select(self, population, evol_par):
+
+        norm_fitness = population[:, -1] - min(population[:, -1])
+        norm_fitness = norm_fitness/sum(norm_fitness)
+        
+        sort_idx = argsort(norm_fitness)
+        roullete = cumsum(sort(norm_fitness))
+        
+        select_range = 1.0/(population.shape[0]/2)
+        points = random.rand(1)*select_range + select_range*arange(0, population.shape[0]/2)
+
+        survivors = zeros((population.shape[0]/2, population.shape[1]))
+        survivors_par = zeros((evol_par.shape[0]/2, evol_par.shape[1]))
+        for i in arange(population.shape[0]/2):
+            idx = sum(points[i] > roullete)
+            survivors[i, :] = population[sort_idx[idx], :]
+            survivors_par[i, :] = evol_par[sort_idx[idx], :]
+
+        return survivors, survivors_par
+
+class ElitistEEStocasticUnivSamplingSelection(object):
 
     def select(self, population, evol_par):
 

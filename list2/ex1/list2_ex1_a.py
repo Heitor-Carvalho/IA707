@@ -19,16 +19,16 @@ def objective_fun(dist_matrix, population):
 def main():
         
     dist_matrix = loadtxt('dist.txt')
-    max_iteration = 350
+    max_iteration = 1500
 
 
     # Instantiating genetic operators
     binmut_op = permut.ElitistPercentReverseMutation(1)
     cross_op = permcross.ElitistPMXCrossover()    
-    selection_op = selec.ElitistTournamentSelection(0.75)
+    selection_op = selec.ElitistTournamentSelection(0.5)
 
     # Population size
-    N = 100
+    N = 50
     
     # Generating population
     init_sol = zeros((N, dist_matrix.shape[1]))
@@ -40,8 +40,6 @@ def main():
 
     # Creating fitness tracking
     fitness_tracking = zeros((max_iteration, 3))
-
-    import pdb; pdb.set_trace()
 
     for i in arange(max_iteration):
         

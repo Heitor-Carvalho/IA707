@@ -6,42 +6,64 @@ import geneticalgorithm.mutatoroperator.real_mutation as realmut
 import geneticalgorithm.crossoperator.real_cross as realcross
 import geneticalgorithm.selectionoperator.selection as selec
 
+# sphere test function
+def objective_fun(value, it):
 
-def objective_fun(value):
     x = value[:, 0]
     y = value[:, 1]
+    
+    fitness = -(x*x + y*y)     
 
-    fitness = x*sin(4*pi*x) - y*sin(4*pi*y + pi) + 1
-    fitness[x > 2] = 0
-    fitness[x < -1] = 0
-    fitness[y > 2] = 0
-    fitness[y < -1] = 0
+    if(it > 50):
+        fitness = -((x-1)*(x-1) + (y-1)*(y-1))
+    if(it > 100):
+        fitness = -((x-2)*(x-2) + (y-2)*(y-2))
+    if(it > 150):
+        fitness = -((x-3)*(x-3) + (y-3)*(y-3))
 
     return fitness
 
+def objective_fun(value, it):
+    x = value[:, 0]
+    y = value[:, 1]
+    
+    fitness = x*sin(4*pi*x) - y*sin(4*pi*y + pi) + 1
+    # fitness[x > 2] = -10
+    # fitness[x < -1] = -10
+    # fitness[y > 2] = -10
+    # fitness[y < -1] = -10
+    # if(it > 50):
+    #     print it
+    #     fitness = (x-2.8)*sin(4*pi*(x-2.8)) - (y-2.8)*sin(4*pi*(y-2.8) + pi) + 1
+    #     fitness[x-2.8 > 2] = -10
+    #     fitness[x-2.8 < -1] = -10
+    #     fitness[y-2.8 > 2] = -10
+    #     fitness[y-2.8 < -1] = -10
+     
+    return fitness
+
 def main():
-    max_iteration = 100
+    max_iteration = 300
 
     # Population size
-    N = 50
+    N = 20
 
     max_mut_it = max_iteration
 
     # Instantiating genetic operators
-    mutation_op = realmut.ElitistCorrelatedMutation(0.01, 0*5*(2*N)**(-0.5), 0.5*(2*(N**0.5))**-0.5)
+    mutation_op = realmut.ElitistCorrelatedMutation(0, 0.4, 0.54) # beta, sqrt(2*par_len)^-1, sqrt(2*sqrt(par_len))^-1
     cross_op =  realcross.ElitistEEArithmeticCrossover()
-    selection_op = selec.EETournamentSelection(0.2)
+    selection_op = selec.EETournamentSelection(0.8)
 
     # Generating population
-    init_solutions = 5*random.rand(N, 2) - 1;
-    population = concatenate([init_solutions, zeros((init_solutions.shape[0], 1))], axis = 1)
+    init_solutions = 1*random.rand(N, 2)-1;
     population = concatenate([init_solutions, zeros((init_solutions.shape[0], 1))], axis = 1)
     
     # Generating evolution parameters
     evol_par = zeros((population.shape[0], 2))
-    import pdb; pdb.set_trace()
-    evol_par[:, 0:1] = 20*random.randn(population.shape[0], 1)
-    evol_par[:, 1:2] = 0#2*pi*random.rand(population.shape[0], 1)
+#    import pdb; pdb.set_trace()
+    evol_par[:, 0:1] = 0.5
+    evol_par[:, 1:2] = 0
 
     new_population = zeros((population.shape[0]*2, population.shape[1]))
 
@@ -51,16 +73,16 @@ def main():
     for i in arange(max_iteration):
     
         # Population fitness evaluation
-        population[:, -1] = objective_fun(population)
+        population[:, -1] = objective_fun(population,i)
 
         # Population mutation
-        population = mutation_op.mutate(population, i, evol_par)
+        population, evol_par = mutation_op.mutate(population, i, evol_par)
 
         # Population crossover
         new_population, new_evol_par, idx_sons = cross_op.cross(population, evol_par)
 
         # Fitness evaluation
-        new_population[:, -1] = objective_fun(new_population)
+        new_population[:, -1] = objective_fun(new_population,i)
         
         # Selecting individuals                
         population, evol_par = selection_op.select(new_population, new_evol_par)   
