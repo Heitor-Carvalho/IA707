@@ -1,6 +1,18 @@
 from numpy import *
 from copy import copy
 
+class EEBestSelection(object):
+    
+    def __init__(self, mu):
+        self.mu = mu
+
+    def select(self, population, evol_par):
+
+        best_idx = argsort(population[:, -1])[population.shape[0]-self.mu:population.shape[0]]
+
+        return population[best_idx, :], evol_par[best_idx, :]
+        
+
 class PETournamentSelection(object):
     
     def __init__(self, tour_size):
@@ -23,29 +35,24 @@ class PETournamentSelection(object):
 
 class EETournamentSelection(object):
 
-    def __init__(self, tournament_percent):
+    def __init__(self, tournament_percent, mu):
         self.percent = tournament_percent
+        self.mu = mu
 
     def select(self, population, evol_par):
-
-        best = copy(population[argmax(population[:, -1])])
-        best_par = copy(evol_par[argmax(population[:, -1])])
 
         population_size = population.shape[0]/2
         
         tournament_elem_nb = int(self.percent*population_size)
 
-        survivors = zeros((population.shape[0]/2, population.shape[1]))
-        survivors_par = zeros((evol_par.shape[0]/2, evol_par.shape[1]))
+        survivors = zeros((self.mu, population.shape[1]))
+        survivors_par = zeros((self.mu, evol_par.shape[1]))
 
-        for i in arange(population_size):
+        for i in arange(self.mu):
             participants = random.permutation(population.shape[0])[0:tournament_elem_nb]
             winner_idx = participants[argmax(population[participants, -1])]
             survivors[i, :] = population[winner_idx, :] 
             survivors_par[i] = evol_par[winner_idx, :]
-
-        survivors[-1, :] = best
-        survivors_par[-1, :] = best_par
 
         return survivors, survivors_par
 
