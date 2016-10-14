@@ -1,6 +1,23 @@
 from copy import copy
 from numpy import *
 
+class DEMutation(object):
+
+    def __init__(self, f):
+        self.f = f
+
+    def mutate(self, population, iteraction):
+
+        new_population = zeros(population.shape)
+
+        for i in arange(0, population.shape[0]):
+            rrr = random.permutation(population.shape[0])
+            idxs = rrr[where(rrr != i)][0:3]
+            new_population[i, :-1] = population[idxs[0], :-1] + self.f*(population[idxs[1], :-1] \
+                                                          -         population[idxs[2], :-1]) 
+
+        return new_population
+
 
 class CorrelatedMutation(object):
     # The behaviour espected by sigma does not work well when the best 

@@ -39,44 +39,37 @@ def main():
     max_iteration = 140
 
     # Population parameters
-    N = 10
-    M = 50
+    N = 50
 
     max_mut_it = max_iteration
 
     # Instantiating genetic operators
-    mutation_op = realmut.CorrelatedMutation(0.083, 0.21, 0.24) # beta, sqrt(2*par_len)^-1, sqrt(2*sqrt(par_len))^-1
-    cross_op =  realcross.EEAndArithmeticCrossover(N, M)
-    selection_op = selec.EEBestSelection(N)
+    mutation_op = realmut.DEMutation(0.3) 
+    cross_op =  realcross.DECrossover(0.5)
+    selection_op = selec.DESelection()
 
     # Generating population
     init_solutions = 2*random.rand(N, 2)-1;
     population = concatenate([init_solutions, zeros((init_solutions.shape[0], 1))], axis = 1)
-    
-    # Generating evolution parameters
-    evol_par = zeros((population.shape[0], 2))
-
-    evol_par[:, 0:1] = 0.5
-    evol_par[:, 1:2] = random.randn(N,1)
-
-    new_population = zeros((population.shape[0]*2, population.shape[1]))
+    mut_population = zeros((population.shape[0], population.shape[1]))
 
     # Creating fitness tracking
     fitness_tracking = zeros((max_iteration, 3))
 
     for i in arange(max_iteration):
 
-        # Population crossover
-        new_population, new_evol_par, idx_sons = cross_op.cross(population, evol_par)
-
         # Population mutation
-        new_population, new_evol_par = mutation_op.mutate(new_population, i, new_evol_par)
+        mut_population = mutation_op.mutate(population, i)
+
+        # Population crossover
+        new_population, idx_sons = cross_op.cross(population, mut_population)
 
         # Fitness evaluation
-        new_population[:, -1] = objective_fun(new_population,i)
+        population[:, -1] = objective_fun(population, i)
+        new_population[:, -1] = objective_fun(new_population, i)
         
         # Selecting individuals                
-        population, evol_par = selection_op.select(new_population, new_evol_par)   
+        population = selection_op.select(population, new_population)   
         
         fitness_tracking[i, 0] = max(population[:, -1])
         fitness_tracking[i, 1] = min(population[:, -1])

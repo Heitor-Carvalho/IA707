@@ -1,6 +1,16 @@
 from numpy import *
 from copy import copy
 
+class DESelection(object):
+    
+    def select(self, population, new_population):
+
+        idxs = population[:, -1] > new_population[:, -1]
+        concatenate([population[idxs, :], new_population[idxs == False, :]], axis = 0)
+
+        return concatenate([population[idxs, :], new_population[idxs == False, :]], axis = 0)
+
+
 class EEBestSelection(object):
     
     def __init__(self, mu):

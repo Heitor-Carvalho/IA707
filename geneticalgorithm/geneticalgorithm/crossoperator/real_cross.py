@@ -2,6 +2,24 @@ import numpy.matlib as matlib
 from copy import copy
 from numpy import *
 
+class DECrossover(object):
+
+    def __init__(self, cr):
+        self.cr = cr
+
+    def cross(self, population, mut_population):
+        
+        new_population = zeros(population.shape)
+        for i in arange(0, population.shape[0]):
+            variables = random.rand(population.shape[1]-1) < self.cr
+            if(sum(variables) == 0):
+                variables[random.permutation(population.shape[1]-1)] = True
+        
+            new_population[i, :-1] = concatenate([population[i, :-1][variables == False], mut_population[i, :-1][variables == True]], axis = 0)
+
+        return new_population, population.shape[0]
+
+
 class EEAndArithmeticCrossover(object):
 
     def __init__(self, mu, _lambda):
