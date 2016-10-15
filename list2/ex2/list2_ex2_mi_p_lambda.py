@@ -36,16 +36,16 @@ def objective_fun(value, it):
     return fitness
 
 def main():
-    max_iteration = 100
+    max_iteration = 77
 
     # Population size
-    N = 3
+    N = 2
     M = 50
 
     max_mut_it = max_iteration
 
     # Instantiating genetic operators
-    mutation_op = realmut.CorrelatedMutation(0.083, 0.18, 0.2) # beta, sqrt(2*par_len)^-1, sqrt(2*sqrt(par_len))^-1
+    mutation_op = realmut.CorrelatedMutation(0.083, 0.21, 0.24) # beta, sqrt(2*par_len)^-1, sqrt(2*sqrt(par_len))^-1
     cross_op =  realcross.EEPlusArithmeticCrossover(N, M)
     selection_op = selec.EEBestSelection(N)
 

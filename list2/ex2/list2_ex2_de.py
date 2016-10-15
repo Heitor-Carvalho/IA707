@@ -36,7 +36,7 @@ def objective_fun(value, it):
     return fitness
 
 def main():
-    max_iteration = 140
+    max_iteration = 40
 
     # Population parameters
     N = 50

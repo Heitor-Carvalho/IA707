@@ -36,10 +36,10 @@ def objective_fun(value, it):
     return fitness
 
 def main():
-    max_iteration = 140
+    max_iteration = 80
 
     # Population parameters
-    N = 10
+    N = 2
     M = 50
 
     max_mut_it = max_iteration
