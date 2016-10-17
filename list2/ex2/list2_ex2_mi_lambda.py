@@ -46,7 +46,7 @@ def main():
 
     # Instantiating genetic operators
     mutation_op = realmut.CorrelatedMutation(0.083, 0.21, 0.24) # beta, sqrt(2*par_len)^-1, sqrt(2*sqrt(par_len))^-1
-    cross_op =  realcross.EEAndArithmeticCrossover(N, M)
+    cross_op =  realcross.EEArithmeticCrossover(N, M)
     selection_op = selec.EEBestSelection(N)
 
     # Generating population
@@ -59,7 +59,7 @@ def main():
     evol_par[:, 0:1] = 0.5
     evol_par[:, 1:2] = random.randn(N,1)
 
-    new_population = zeros((population.shape[0]*2, population.shape[1]))
+    new_population = zeros((M, population.shape[1]))
 
     # Creating fitness tracking
     fitness_tracking = zeros((max_iteration, 3))

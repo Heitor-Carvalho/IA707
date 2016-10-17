@@ -20,7 +20,7 @@ class DECrossover(object):
         return new_population, population.shape[0]
 
 
-class EEAndArithmeticCrossover(object):
+class EEArithmeticCrossover(object):
 
     def __init__(self, mu, _lambda):
         self.mu = mu
@@ -44,37 +44,6 @@ class EEAndArithmeticCrossover(object):
             sons_par[:, 1] = (evol_parameters[idx[0], 1] + evol_parameters[idx[1], 1])/2
 
         return sons, sons_par, self._lambda
-
-class EEPlusArithmeticCrossover(object):
-
-    def __init__(self, mu, _lambda):
-        self.mu = mu
-        self._lambda = _lambda
-
-    def cross(self, population, evol_parameters):
-
-        if(population.shape[0] == 1):
-            sons = matlib.repmat(population, self._lambda, 1)
-            sons_par = matlib.repmat(evol_parameters, self._lambda, 1)
-            new_population = concatenate([population, sons], axis = 0)
-            new_evol_parameters = concatenate([evol_parameters, sons_par], axis = 0) 
-       
-            return new_population, new_evol_parameters, self._lambda + self.mu
-
-        sons = zeros((self._lambda, population.shape[1]))
-        sons_par = zeros((self._lambda, evol_parameters.shape[1]))
-        for i in arange(0, self._lambda):
-            idx = random.permutation(self.mu)[0:2]
-            alpha = random.rand(1)
-            sons[:, :-1] = alpha*population[idx[0], :-1] + (1 - alpha)*population[idx[1], :-1]
-            sons_par[:, 0] = (evol_parameters[idx[0], 0] + evol_parameters[idx[1], 0])/2
-            sons_par[:, 1] = (evol_parameters[idx[0], 1] + evol_parameters[idx[1], 1])/2
-
-        new_population = concatenate([population, sons], axis = 0)
-        new_evol_parameters = concatenate([evol_parameters, sons_par], axis = 0) 
-
-        return new_population, new_evol_parameters, self._lambda + self.mu
-
 
 class ArithmeticCrossover(object):
 

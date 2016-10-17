@@ -19,7 +19,7 @@ def objective_fun(dist_matrix, population):
 def main():
         
     dist_matrix = loadtxt('dist.txt')
-    max_iteration = 1500
+    max_iteration = 2000
 
 
     # Instantiating genetic operators

@@ -59,7 +59,7 @@ def main():
     evol_par[:, 0:1] = 0.5
     evol_par[:, 1:2] = random.randn(N,1)
 
-    new_population = zeros((population.shape[0]*2, population.shape[1]))
+    new_population = zeros((N, population.shape[1]))
 
     # Creating fitness tracking
     fitness_tracking = zeros((max_iteration, 3))
