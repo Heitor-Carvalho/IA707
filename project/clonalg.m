@@ -1,27 +1,30 @@
 clear all
 
+addpath([pwd '/functions'])
+addpath([pwd '/operators'])
+
 % Population parameters
 N = 80;                                            % Population size
 L = 2;                                             % Parameters length
 
 % Population replacement interval
-pop_fact = 0.05;                                   % Population percentage that will be replaced
+pop_fact = 0;                                      % Population percentage that will be replaced
 iterval = 40;                                      % Interval used to add new random individuals
 
 % Fitness function 
-fitness_op = @drop_wave;
-fitness_gf = @drop_wave_graph;
+fitness_op = @list_function;
+fitness_gf = @list_graph_function;
 
 % Mutation operator and parameters
 mutator_op = @clone_hypermutate;
 beta = 1;
-sigma_max = 0.1;
-mut_const = 0.5;
-min = -2;
+sigma_max = 0.07;
+mut_const = 1;
+min = -1;
 max = 2;
 
 % Clone parameters
-clone_factor = 0.4;                               % Number of clones per indivídual = 0.5*N (population size)
+clone_factor = 1;                               % Number of clones per indivídual = clone_factor*N (population size)
 
 % Creating initial population
 population = (max-min)*rand(N, L) + min;

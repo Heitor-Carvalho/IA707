@@ -20,3 +20,28 @@ function clones = clone_hypermutate(population, clone_factor, fitness, sig_max, 
 
   
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

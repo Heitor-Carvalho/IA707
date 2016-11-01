@@ -1,4 +1,9 @@
+
+
 clear all
+
+addpath([pwd '/functions'])
+addpath([pwd '/operators'])
 
 % Population parameters
 N = 5;                                             % Initial population size
@@ -9,14 +14,14 @@ MaxN = 200;                                        % Maximun allowed population 
 pop_fact = 0.1;                                    % Population percentage that will be replaced
 
 % Fitness function 
-fitness_op = @list_function;
-fitness_gf = @list_graph_function;
+fitness_op = @bukin;
+fitness_gf = @bukin_graph;
 
 % Mutation operator and parameters
 mutator_op = @clone_hypermutate;
 beta = 1;
 sigma_max = 0.1;
-mut_const = 4;
+mut_const = 1;
 min = -1;
 max = 2;
 
@@ -24,7 +29,7 @@ max = 2;
 sig_thr = 0.25;
 
 % Stability thershold
-stability_trh = 4e-1/10;
+stability_trh = 4e-2;
 
 % Clone parameters
 clone_factor = 0.5;                               % Number of clones per indivídual = 0.5*N (population size)
@@ -66,7 +71,7 @@ for it = 1:itMax
   
   if(abs(average_fitness - mean(fitness)) < stability_trh)
     % Cleaning population
-    new_pop = []
+    new_pop = [];
     while(~isempty(population))
       affinit = affitnity(population, size(population,1));
       idx = find(affinit < sig_thr);
@@ -82,7 +87,6 @@ for it = 1:itMax
       % Cleaning population
       population = population(rm_idx == 1,:);
     end
-    
     population = new_pop;  
 
     % Adding new random individuals
