@@ -1,7 +1,5 @@
-function [gridx, gridy, surf_val] = list_function_graph(min, max, plot_function)
+function fitness = list_graph_function(x, y)
 
-  grid = min:0.04:max;
-  [gridx gridy] = meshgrid(grid,grid);
-  surf_val = plot_function(gridx, gridy);
-  
+  fitness = x.*sin(4*pi*x) - y.*sin(4*pi*y + pi) + 1;
+
 end
