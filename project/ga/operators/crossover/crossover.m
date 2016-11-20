@@ -3,7 +3,7 @@ function new_population = crossover_common(population)
     n = size(population, 1);
     
     idx = reshape(randperm(n), n/2, 2);
-    sons = zeros(n, 2);
+    sons = zeros(n, size(population, 2));
     
     for i=1:n/2
         alpha = rand(1);

@@ -5,38 +5,40 @@ addpath([pwd '/../functions'])
 addpath([pwd '/operators'])
 
 % Algorithm parameters
-N = 65;                                            % Initial population size
-L = 2;                                             % Parameters length
-pop_fact = 0.1;                                    % Population percentage that will be replaced
+N = 10;                                            % Initial population size
+L = 1;                                             % Parameters length
+pop_fact = 0.2;                                    % Population percentage that will be replaced
 
 clone_factor = 0.1;                                % Number of clones per indivídual = 0.5*N (population size)
 
 beta = 1;                                          % Mutation constant
-sigma_max = 0.1;                                   % Max sigma constant
-mut_const = 1;                                     % Mutation decay constant
+sigma_max = 1;                                     % Max sigma constant
+mut_const = 2;                                     % Mutation decay constant
 
-sig_thr = 0.25;                                     % Affinity threshold
+sig_thr = 3;                                       % Affinity threshold
 stability_trh = 0.01*4;                            % Stability thershold
 
 itMax = 600;                                       % Maximum number of iterations
-maxEval = 5e4;                                     % Maximum number of evaluations
+maxEval = 5e3;                                     % Maximum number of evaluations
 
-min_r = -1;                                        % Minimum limit
-max_r = 2;                                         % Maximum limit
+min_r = 0;                                         % Minimum limit
+max_r = 100;                                       % Maximum limit
 
 % Mutation operator and parameters
 mutator_op = @clone_hypermutate;
 
 % Fitness function 
-fitness_op = @list_function;
-fitness_gf = @list_function_graph;
+fitness_op = @hump;
+fitness_gf = @hump;
 
 % ---------------------------------------------------------------------------------------------------%
 % ---------------------------------------------------------------------------------------------------%
 % ---------------------------------------------------------------------------------------------------%
 
 % Figures graph
-[gridx, gridy, surf_val] = generate_graph(min_r, max_r, fitness_gf); 
+load('hump_parameters');
+xaxis = 0:1e-2:100;
+surf_val = fitness_gf(xaxis, peaks, radios, shapes, amps); 
 
 % Creating initial population
 population = (max_r-min_r)*rand(N, L) + min_r;
@@ -61,7 +63,7 @@ eval = 0;
 while(it < itMax && eval <= maxEval)
   
   % Fitness, average fitness and current population size
-  fitness = fitness_op(population);
+  fitness = fitness_op(population, peaks, radios, shapes, amps);
   average_fitness = mean(fitness);
   
   N = size(population,1);
@@ -74,13 +76,13 @@ while(it < itMax && eval <= maxEval)
   fitness_avg_hist(it) = mean(fitness);
   fitness_min_hist(it) = min(fitness);
   fitness_max_hist(it) = max(fitness);
-  [np(it), total_fit(it)] = minimum_metrics(population, min_locals, min_fitness, eps); 
+  [np(it), total_fit(it)] = minimum_metrics(population, peaks, amps, eps); 
   
   % Cloning and Mutating 
   clones = mutator_op(population, clone_factor, fitness, sigma_max, mut_const, beta, min_r, max_r);
 
   % Finding best clone for each individual
-  fitness = fitness_op(clones);
+  fitness = fitness_op(clones, peaks, radios, shapes, amps);
 
   % Counting number of evaluations used
   eval = eval + size(clones, 1);
@@ -121,15 +123,14 @@ while(it < itMax && eval <= maxEval)
 
   end
 
+  % Ploting
   figure(1)
   clf
-  mesh(gridx, gridy, surf_val)
-  hold on
-  plot3(population(:,1), population(:,2), fitness_op(population),'*')
-  xlim([min_r max_r])
-  ylim([min_r max_r])
-  drawnow()
+  plot(xaxis, surf_val)
   grid on;
+  hold on
+  plot(population, fitness_op(population, peaks, radios, shapes, amps),'*')
+  drawnow()
 
   
 end    

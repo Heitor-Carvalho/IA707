@@ -8,30 +8,32 @@ addpath([pwd '/operators/selection'])
 addpath([pwd '/operators/niching'])
 
 % Algorithm parameters
-N = 100;                                        % Population size                                         
-L = 2;                                          % Parameters length
+N = 20;                                        % Population size                                         
+L = 1;                                         % Parameters length
 
-max_sig = 0.1;                                 % Max sigma constant
-mut_const = 0.25;                                % Mutation decay constant
+max_sig = 15;                                 % Max sigma constant
+mut_const = 0.25;                              % Mutation decay constant
 
-d = 0.25;                                       % Affinity threshold
+d = 3;                                      % Affinity threshold
 
-itMax = 600;                                    % Maximum number of iterations
-maxEval = 5e4;                                  % Maximum number of evaluations
+itMax = 600;                                   % Maximum number of iterations
+maxEval = 5e3;                                 % Maximum number of evaluations
 
-min_r = -1;                                     % Minimum limit
-max_r = 2;                                      % Maximum limit
+min_r = 0;                                     % Minimum limit
+max_r = 100;                                   % Maximum limit
 
 % Fitness function 
-fitness_op = @list_function;
-fitness_gf = @list_function_graph;
+fitness_op = @hump;
+fitness_gf = @hump;
 
 % ---------------------------------------------------------------------------------------------------%
 % ---------------------------------------------------------------------------------------------------%
 % ---------------------------------------------------------------------------------------------------%
 
 % Figures graph
-[gridx, gridy, surf_val] = generate_graph(min_r, max_r, fitness_gf); 
+load('hump_parameters');
+xaxis = 0:1e-2:100;
+surf_val = fitness_gf(xaxis, peaks, radios, shapes, amps); 
 
 % Creating initial population
 new_population = (max_r-min_r)*rand(2*N, L) + min_r;
@@ -42,7 +44,6 @@ fitness_min_hist = zeros(1, itMax);
 fitness_max_hist = zeros(1, itMax);
 
 % Evaluation parameters
-load('list_fitness_min');
 eps = 0.05;
 np = zeros(itMax, 1);
 total_fit = zeros(itMax, 1);
@@ -54,7 +55,7 @@ eval = 0;
 while(it < itMax && eval <= maxEval)
 
   % Fitness, average fitness
-  fitness = fitness_op(new_population);
+  fitness = fitness_op(new_population, peaks, radios, shapes, amps);
   [best_val, best_idx] = sort(fitness);
   
   % Counting number of iterations used
@@ -70,17 +71,16 @@ while(it < itMax && eval <= maxEval)
 
   population = sus(new_population, fitness);
   population(1:1, :) = new_population(best_idx(end:end),:);
-  [np(it), total_fit(it)] = minimum_metrics(population, min_locals, min_fitness, eps); 
+  [np(it), total_fit(it)] = minimum_metrics(population, peaks, amps, eps); 
 
   % Ploting
   figure(1)
   clf
-  mesh(gridx, gridy, surf_val)
+  plot(xaxis, surf_val)
+  grid on;
   hold on
-  plot3(population(:,1), population(:,2), fitness_op(population(:,:)),'*')
+  plot(population, fitness_op(population, peaks, radios, shapes, amps),'*')
   drawnow()
-  grid;
-
 
   new_population = crossover(population);
   new_population = mutation(new_population, max_sig, mut_const, it, min_r, max_r);
