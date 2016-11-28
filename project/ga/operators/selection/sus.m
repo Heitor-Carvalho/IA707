@@ -1,4 +1,4 @@
-function new_population = sus(population, fitness, percent)
+function new_population = sus(population, fitness)
 
   [N, L] = size(population);
   [fitness_sort, idx] = sort(fitness);
@@ -9,12 +9,11 @@ function new_population = sus(population, fitness, percent)
   
   % Normalizing this probability
   roulette = cumsum(norm_fitness);
-
   dist_selec = 1/(N/2);
   points_selec = rand(1)*dist_selec;
 
   points = 0:(1/(N/2)):(N/2-1)*(1/(N/2));
-  points = points_selec + points;
+  points = 1 - (points_selec + points);
 
   new_population = zeros(N/2, L);
   for i=1:N/2

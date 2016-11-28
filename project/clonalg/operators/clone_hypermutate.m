@@ -2,7 +2,7 @@ function clones = clone_hypermutate(population, clone_factor, fitness, sig_max, 
    
    % Normalizing fitness
    fitness_norm = (fitness - min(fitness))/(max(fitness) - min(fitness)); 
-   
+
    % Creating clones
    clones = repmat(population, ceil(size(population, 1)*clone_factor), 1);
 

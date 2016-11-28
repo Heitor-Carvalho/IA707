@@ -7,14 +7,14 @@ addpath([pwd '/operators'])
 % Algorithm parameters
 N = 20;                                           % Population size
 L = 1;                                            % Parameters length
-pop_fact = 0.06;                                  % Population percentage that will be replaced
-iterval = 8;                                      % Interval used to add new random individuals
+pop_fact = 0.05;                                  % Population percentage that will be replaced
+iterval = 1;                                      % Interval used to add new random individuals
 
 clone_factor = 4/N;                               % Number of clones per indivídual = clone_factor*N (population size)
 
 beta = 1;                                         % Mutation constant
-sigma_max = 1;                                    % Max sigma constant
-mut_const = 2;                                    % Mutation decay constant
+sigma_max = 0.5;                                    % Max sigma constant
+mut_const = 5;                                    % Mutation decay constant
 
 itMax = 1000;                                     % Maximum number of iterations
 maxEval = 5e3;                                    % Maximum number of evaluations
@@ -94,15 +94,14 @@ while(it < itMax && eval <= maxEval)
   end
   
   % Ploting
-  figure(1)
-  clf
-  plot(xaxis, surf_val)
-  grid on;
-  hold on
-  plot(population, fitness_op(population, peaks, radios, shapes, amps),'*')
-  drawnow()
+%   figure(1)
+%   clf
+%   plot(xaxis, surf_val)
+%   grid on;
+%   hold on
+%   plot(population, fitness_op(population, peaks, radios, shapes, amps),'*')
+%   drawnow()
   
-
 end  
   
     

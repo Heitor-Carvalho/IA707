@@ -1,4 +1,4 @@
-% clear all
+    % clear all
 
 addpath([pwd '/..'])
 addpath([pwd '/../functions'])
@@ -7,7 +7,7 @@ addpath([pwd '/operators'])
 % Algorithm parameters
 N = 65;                                            % Initial population size
 L = 2;                                             % Parameters length
-pop_fact = 0.1;                                    % Population percentage that will be replaced
+pop_fact = 0.05;                                    % Population percentage that will be replaced
 
 clone_factor = 0.1;                                % Number of clones per indivídual = 0.5*N (population size)
 
@@ -95,7 +95,7 @@ while(it < itMax && eval <= maxEval)
   % New population sorted by fitness
   [fitness, idx] = sort(fitness(bests_idx));
   population(1:N, :) = clones(bests_idx(idx), :);
-  
+
   if(abs(average_fitness - mean(fitness)) < stability_trh)
     % Cleaning population
     new_pop = [];

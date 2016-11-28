@@ -1,4 +1,4 @@
-% clear all
+clear all
 
 addpath([pwd '/../'])
 addpath([pwd '/../functions'])
@@ -11,8 +11,8 @@ addpath([pwd '/operators/niching'])
 N = 100;                                        % Population size                                         
 L = 2;                                          % Parameters length
 
-max_sig = 0.1;                                 % Max sigma constant
-mut_const = 0.25;                                % Mutation decay constant
+max_sig = 0.1;                                  % Max sigma constant
+mut_const = 0.25;                               % Mutation decay constant
 
 d = 0.25;                                       % Affinity threshold
 
@@ -56,6 +56,7 @@ while(it < itMax && eval <= maxEval)
   % Fitness, average fitness
   fitness = fitness_op(new_population);
   [best_val, best_idx] = sort(fitness);
+  best = new_population(best_idx(end), :);
   
   % Counting number of iterations used
   it = it + 1;
@@ -69,7 +70,7 @@ while(it < itMax && eval <= maxEval)
   fitness = clearing(new_population, fitness, d);  
 
   population = sus(new_population, fitness);
-  population(1:1, :) = new_population(best_idx(end:end),:);
+  
   [np(it), total_fit(it)] = minimum_metrics(population, min_locals, min_fitness, eps); 
 
   % Ploting
@@ -81,8 +82,9 @@ while(it < itMax && eval <= maxEval)
   drawnow()
   grid;
 
-
   new_population = crossover(population);
   new_population = mutation(new_population, max_sig, mut_const, it, min_r, max_r);
+
+  new_population(1, :) = best;
 
 end 

@@ -8,7 +8,7 @@ addpath([pwd '/operators'])
 N = 120;                                           % Population size
 L = 2;                                             % Parameters length
 pop_fact = 0.1;                                    % Population percentage that will be replaced
-iterval = 30;                                      % Interval used to add new random individuals
+iterval = 1;                                       % Interval used to add new random individuals
 
 clone_factor = 4/N;                                % Number of clones per indivídual = clone_factor*N (population size)
 

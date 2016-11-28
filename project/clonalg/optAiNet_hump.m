@@ -9,7 +9,7 @@ N = 10;                                            % Initial population size
 L = 1;                                             % Parameters length
 pop_fact = 0.2;                                    % Population percentage that will be replaced
 
-clone_factor = 0.1;                                % Number of clones per indivídual = 0.5*N (population size)
+clone_factor = 0.6;                                % Number of clones per indivídual = 0.5*N (population size)
 
 beta = 1;                                          % Mutation constant
 sigma_max = 1;                                     % Max sigma constant
@@ -123,7 +123,7 @@ while(it < itMax && eval <= maxEval)
 
   end
 
-  % Ploting
+%   Ploting
   figure(1)
   clf
   plot(xaxis, surf_val)
