@@ -26,13 +26,13 @@ class PunctualExpBinaryMutation():
 
         self.mut_prob = bin_mutation_par["initial_prob"]
         self.coef = bin_mutation_par['exp_coef']
+        self.min_prob = bin_mutation_par['min_prob']
 
     def mutate(self, population, iteraction):
-
-        mutation = random.random((population.shape)) < self.mut_prob
-        self.mut_prob = max(self.mut_prob*exp(-self.coef*iteraction), 0.1)
-
-        return population ^ mutation
+        mutation = random.random((population.shape[0], population.shape[1]-1)) < self.mut_prob
+        self.mut_prob = max(self.mut_prob*exp(-self.coef*iteraction), self.min_prob)
+        population[:,:-1] =  population[:, :-1].astype('bool') ^ mutation.astype('bool')
+        return population
 
 class PunctualStepBinaryMutation():
 

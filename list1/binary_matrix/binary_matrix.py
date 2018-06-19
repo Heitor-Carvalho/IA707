@@ -30,12 +30,16 @@ def main():
     max_iteration = 100
 
     bin_mutation_par = {}
-    bin_mutation_par['steps'] = array([0.1, 0.2, 0.3, 0.7])*max_iteration
-    bin_mutation_par['steps'] = bin_mutation_par['steps'].astype('int')
-    bin_mutation_par['probs'] = [0.5, 0.2, 0.01, 0.005, 0.001]
+#    bin_mutation_par['steps'] = array([0.1, 0.2, 0.3, 0.7])*max_iteration
+#    bin_mutation_par['steps'] = bin_mutation_par['steps'].astype('int')
+#    bin_mutation_par['probs'] = [0.5, 0.2, 0.01, 0.005, 0.001]
+    bin_mutation_par["initial_prob"] = 0.5
+    bin_mutation_par['exp_coef'] = 0.001
+    bin_mutation_par['min_prob'] = 0.001
 
     # Instantiating genetic operators
-    binmut_op = binmut.PunctualStepBinaryMutation(bin_mutation_par)
+    binmut_op = binmut.PunctualExpBinaryMutation(bin_mutation_par)
+    #binmut_op = binmut.PunctualStepBinaryMutation(bin_mutation_par)
     cross_op = bincross.OnePointCrossover()
     selection_op = selec.ElitistTournamentSelection(0.6)
 
